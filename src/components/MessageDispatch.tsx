@@ -109,36 +109,23 @@ export const MessageDispatch: React.FC = () => {
     let successCount = 0;
 
     try {
-      for (const customer of filteredCustomers) {
-        try {
-          const payload = {
-            template: selectedTemplate,
-            customer: {
-              id: customer.id,
-              name: customer.name,
-              phone: customer.phone,
-              email: customer.email,
-              birth_date: customer.birth_date,
-              unit: customer.unit
-            },
-            timestamp: new Date().toISOString(),
-            source: 'barbershop-admin'
-          };
+      const payload = {
+        template: selectedTemplate,
+        unit: selectedUnit,
+        timestamp: new Date().toISOString(),
+        source: 'barbershop-admin'
+      };
 
-          const response = await fetch(webhookUrl, {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(payload),
-          });
+      const response = await fetch(webhookUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload),
+      });
 
-          if (response.ok) {
-            successCount++;
-          }
-        } catch (error) {
-          console.error(`Erro ao enviar para ${customer.name}:`, error);
-        }
+      if (response.ok) {
+        successCount = filteredCustomers.length;
       }
 
       setDispatchResults({
